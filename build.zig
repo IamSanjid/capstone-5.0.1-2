@@ -76,11 +76,13 @@ pub fn build(b: *std.Build) void {
     {
         const cstool = b.addExecutable(.{
             .name = "cstool",
-            .target = target,
-            .optimize = optimize,
-            .pic = pic,
-            .strip = strip,
-            .link_libc = true,
+            .root_module = b.createModule(.{
+                .target = target,
+                .optimize = optimize,
+                .pic = pic,
+                .strip = strip,
+                .link_libc = true,
+            }),
         });
         cstool.addIncludePath(upstream.path("include")); // remove this in capstone v6
         cstool.linkLibrary(capstone);
@@ -112,11 +114,13 @@ pub fn build(b: *std.Build) void {
             const name = file["test_".len .. file.len - 2];
             const exe = b.addExecutable(.{
                 .name = b.fmt("test-{s}", .{name}),
-                .target = target,
-                .optimize = optimize,
-                .pic = pic,
-                .strip = strip,
-                .link_libc = true,
+                .root_module = b.createModule(.{
+                    .target = target,
+                    .optimize = optimize,
+                    .pic = pic,
+                    .strip = strip,
+                    .link_libc = true,
+                }),
             });
             exe.addIncludePath(upstream.path("include")); // remove this in capstone v6
             exe.linkLibrary(capstone);
